@@ -1,0 +1,24 @@
+int solve(vector<int>& prices, int n) {
+   int dp[n+1][n+1];
+    vector<int> wt(n);
+    for(int i = 0 ; i < n; i ++ )
+    {
+        wt[i] = i+1;
+    }
+   memset(dp, 0, sizeof(dp));
+   for(int i = 1; i<= n; i++)
+   {
+       for(int j = 1; j <= n; j++ )
+       {
+           int ans = dp[i-1][j];
+           if(wt[i-1] <= j)
+           {
+               dp[i][j] = max(ans , prices[i-1] + dp[i][j-wt[i-1]]);
+           }
+           else{
+               dp[i][j] = ans;
+           }
+       }
+   } 
+   return dp[n][n];
+}
