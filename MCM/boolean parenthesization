@@ -1,0 +1,63 @@
+int dp[200][200];
+    int solve(string s , int i, int j, bool isTrue)
+    {
+        //step-2 base condition
+        if(i > j) // string is empty
+            return 0;
+        //check a variable    
+        if(i == j)
+        {
+            if(isTrue)
+                return s[i] == 'T';
+            else
+                return s[i] == 'F';
+        }
+        int ans = 0;
+        // step-3 for loop
+        for(int k = i+1; k<j ; k+= 2)
+        {
+            int lt = solve(s, i, k-1,true);
+            int lf = solve(s, i, k-1, false);
+            int rt = solve(s, k+1, j, true);
+            int rf = solve(s, k+1, j, false);
+            
+            
+            // step-4 write ans
+            if(s[k] == '|')
+            {
+                if(isTrue)
+                {
+                    ans += lt*rt + rt*lf + rf*lt;
+                }else{
+                    ans += lf*rf;
+                }
+            }
+            else if(s[k] == '&')
+            {
+                if(isTrue ==false)
+                {
+                    ans += lf*rf + rt*lf + rf*lt;
+                }else{
+                    ans += lt*rt;
+                }
+            }
+            if(s[k] == '^')
+            {
+                if(isTrue)
+                {
+                    ans +=   rt*lf + rf*lt;
+                }else{
+                    ans += lt*rt + lf*rf;
+                }
+            }
+            
+        }
+        return ans;
+        
+    }
+    int countWays(int N, string S){
+        // code here
+        memset(dp, -1, sizeof(dp));
+        // step-1 initialize i, j
+        return solve(S, 0, N-1,true);
+    }
