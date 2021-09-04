@@ -1,13 +1,13 @@
-int dp[200][200][2];
-    int solve(string s , int i, int j, bool isTrue)
+ int dp[201][201][2];
+    int solve(string s , int i, int j, int isTrue)
     {
         //step-2 base condition
         if(i > j) // string is empty
-            return 0;
+            return false;
         //check a variable    
         if(i == j)
         {
-            if(isTrue)
+            if(isTrue == 1)
                 return s[i] == 'T';
             else
                 return s[i] == 'F';
@@ -22,14 +22,17 @@ int dp[200][200][2];
                 lt = dp[i][k-1][1];
             else 
                 lt = solve(s, i, k-1,1);
+                
             if(dp[i][k-1][0] !=-1)
                 lf = dp[i][k-1][0];
             else 
                 lf = solve(s, i, k-1, 0);
+                
             if(dp[k+1][j][1] !=-1)
                 rt = dp[k+1][j][1];
             else 
                 rt = solve(s, k+1, j, 1);
+                
             if(dp[k+1][j][0] !=-1)
                 rf = dp[k+1][j][0];
             else 
@@ -37,24 +40,26 @@ int dp[200][200][2];
             
             
             // step-4 write ans
-            if(s[k] == '|')
+            if(s[k] == '&')
             {
-                if(isTrue)
+                if(isTrue == 1)
+                {
+                 ans += lt*rt;   
+                }else{
+                    
+                    ans += lf*rf + rt*lf + rf*lt;
+                }
+            }
+            else if(s[k] == '|')
+            {
+                if(isTrue == 1)
                 {
                     ans += lt*rt + rt*lf + rf*lt;
                 }else{
                     ans += lf*rf;
                 }
             }
-            else if(s[k] == '&')
-            {
-                if(isTrue ==false)
-                {
-                    ans += lf*rf + rt*lf + rf*lt;
-                }else{
-                    ans += lt*rt;
-                }
-            }
+           
             if(s[k] == '^')
             {
                 if(isTrue)
@@ -64,14 +69,14 @@ int dp[200][200][2];
                     ans += lt*rt + lf*rf;
                 }
             }
-            
+            dp[i][j][isTrue] = ans%1003;
         }
-        return dp[i][j][isTrue] = ans;
+        return ans%1003;
         
     }
     int countWays(int N, string S){
         // code here
         memset(dp, -1, sizeof(dp));
         // step-1 initialize i, j
-        return solve(S, 0, N-1,true);
+        return solve(S, 0, N-1,1);
     }
